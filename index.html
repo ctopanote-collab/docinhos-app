@@ -24,6 +24,11 @@ button{border:0;border-radius:13px;padding:13px 15px;font-size:15px;font-weight:
 .order{padding:13px;border:1px solid var(--line);border-radius:15px;margin:9px 0;background:#fff}.order strong{color:var(--brown)}.empty{text-align:center;padding:35px 10px;color:var(--muted)}
 .badge{display:inline-block;background:var(--beige);color:var(--brown);border-radius:99px;padding:4px 8px;font-size:10px;margin-top:5px}.hidden{display:none!important}
 .notice{background:#f1e1d4;border-radius:12px;padding:11px;font-size:12px;line-height:1.4;margin-bottom:13px}
+
+/* iPhone: keep native date/time controls from overlapping */
+#novo .grid{grid-template-columns:1fr}
+#novo .full{grid-column:auto}
+#novo input,#novo select{min-width:0;width:100%;max-width:100%}
 </style>
 </head>
 <body>
