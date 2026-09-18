@@ -15,9 +15,9 @@
 header{background:var(--brown);color:#fff;padding:28px 20px 22px;border-radius:0 0 28px 28px}.brand{font-size:12px;letter-spacing:3px;text-transform:uppercase}.title{font:400 30px Georgia,serif;margin:4px 0}.sub{font-size:12px;opacity:.88}
 main{padding:16px}.screen{display:none}.screen.active{display:block}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:16px;margin-bottom:13px}
 h2{font:400 22px Georgia,serif;color:var(--brown);margin:3px 0 15px}.section-title{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--brown);margin:0 0 10px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}label{font-size:11px;font-weight:700;display:block;margin-bottom:5px}
-input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;color:var(--text);font-size:15px}
-.flavor{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 7px;border:1px solid #eadbd0;border-radius:11px;margin:7px 0;background:#fff}.flavor span{font-size:13px;line-height:1.2}.fq{width:62px!important;text-align:center;font-weight:700;padding:8px!important}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.grid>div{min-width:0}.full{grid-column:1/-1}label{font-size:11px;font-weight:700;display:block;margin-bottom:5px}
+input,select{display:block;width:100%;min-width:0;max-width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;color:var(--text);font-size:15px}
+input[type="date"],input[type="time"]{font-size:14px}.flavor{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 7px;border:1px solid #eadbd0;border-radius:11px;margin:7px 0;background:#fff}.flavor span{font-size:13px;line-height:1.2}.fq{width:62px!important;text-align:center;font-weight:700;padding:8px!important}
 .total{display:flex;justify-content:space-between;background:var(--bg);border-radius:12px;padding:13px;margin-top:12px;font-weight:800;color:var(--brown)}
 button{border:0;border-radius:13px;padding:13px 15px;font-size:15px;font-weight:700;cursor:pointer}.primary{width:100%;background:var(--brown);color:#fff}.secondary{width:100%;background:var(--beige);color:var(--brown);margin-top:8px}.mini{background:var(--beige);color:var(--brown);padding:9px 11px;font-size:12px}
 .bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(540px,100%);height:76px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:5}.nav{background:none;color:var(--muted);font-size:10px;border-radius:0;padding:9px 2px}.nav.active{color:var(--brown);font-weight:800}.nav b{display:block;font-size:22px;margin-bottom:2px}
@@ -124,7 +124,23 @@ dataEntrega:document.getElementById('dataEntrega').value,horario:document.getEle
 sabores:qs,total:qs.reduce((a,x)=>a+x.q,0),valor:document.getElementById('valor').value,pagamento:document.getElementById('pagamento').value,
 dataReserva:document.getElementById('dataReserva').value,horaReserva:document.getElementById('horaReserva').value}}
 function salvarPedido(){let p=dados();pedidos.unshift(p);localStorage.setItem('docinhos_pedidos',JSON.stringify(pedidos));render();document.getElementById('msg').classList.remove('hidden');document.getElementById('msg').textContent='Pedido salvo no seu celular! 🤎';}
-function gerarWhatsApp(){let p=dados();let texto=`🤎 *ORÇAMENTO & RESERVA DE ENCOMENDA*\\n\\nOlá, ${p.cliente}! Segue a confirmação do seu pedido:\\n\\n📅 Data da entrega/retirada: ${fmt(p.dataEntrega)}\\n🕐 Horário: ${p.horario||'—'}\\n📦 Forma de recebimento: ${p.recebimento}\\n\\n🍬 *${p.total} docinhos*\\n${p.sabores.length?p.sabores.map(x=>`☑ ${x.s} — ${x.q} un.`).join('\\n'):'Nenhum sabor selecionado'}\\n\\n💰 Valor total: ${money(p.valor)}\\n💳 Forma de pagamento: ${p.pagamento}\\n\\n🤎 *Encomenda reservada para ${fmt(p.dataReserva)} às ${p.horaReserva||'—'}.*\\n\\nObrigada por escolher nossos docinhos! 🤎`;
+function gerarWhatsApp(){let p=dados();let texto=`🤎 *ORÇAMENTO & RESERVA DE ENCOMENDA*
+
+Olá, ${p.cliente}! Segue a confirmação do seu pedido:
+
+📅 Data da entrega/retirada: ${fmt(p.dataEntrega)}
+🕐 Horário: ${p.horario||'—'}
+📦 Forma de recebimento: ${p.recebimento}
+
+🍬 *${p.total} docinhos*
+${p.sabores.length?p.sabores.map(x=>`☑ ${x.s} — ${x.q} un.`).join('\n'):'Nenhum sabor selecionado'}
+
+💰 Valor total: ${money(p.valor)}
+💳 Forma de pagamento: ${p.pagamento}
+
+🤎 *Encomenda reservada para ${fmt(p.dataReserva)} às ${p.horaReserva||'—'}.*
+
+Obrigada por escolher nossos docinhos! 🤎`;
 navigator.clipboard?.writeText(texto).then(()=>alert('Mensagem copiada! É só colar no WhatsApp. 🤎')).catch(()=>prompt('Copie a mensagem:',texto))}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.screen===id));if(id==='pedidos'||id==='agenda'||id==='home')render();window.scrollTo(0,0)}
 function render(){document.getElementById('homePedidos').textContent=pedidos.length;document.getElementById('homeAgenda').textContent=pedidos.filter(p=>p.dataReserva>=iso()).length;
