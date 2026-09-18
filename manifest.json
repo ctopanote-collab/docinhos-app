@@ -1,0 +1,10 @@
+{
+  "name": "Docinhos com mais amor",
+  "short_name": "Docinhos",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fffaf5",
+  "theme_color": "#5b3929",
+  "lang": "pt-BR",
+  "description": "Pedidos e reservas dos seus docinhos"
+}

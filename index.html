@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#5b3929">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>Docinhos com mais amor</title>
+<link rel="manifest" href="manifest.json">
+<style>
+:root{--brown:#5b3929;--brown2:#754d39;--cream:#fffaf5;--beige:#ead4c3;--bg:#f7eee6;--line:#dec8b7;--text:#40291f;--muted:#8a7062}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.app{max-width:540px;margin:auto;min-height:100vh;background:var(--cream);padding-bottom:82px}
+header{background:var(--brown);color:#fff;padding:28px 20px 22px;border-radius:0 0 28px 28px}.brand{font-size:12px;letter-spacing:3px;text-transform:uppercase}.title{font:400 30px Georgia,serif;margin:4px 0}.sub{font-size:12px;opacity:.88}
+main{padding:16px}.screen{display:none}.screen.active{display:block}.card{background:#fff;border:1px solid var(--line);border-radius:19px;padding:16px;margin-bottom:13px}
+h2{font:400 22px Georgia,serif;color:var(--brown);margin:3px 0 15px}.section-title{font-size:12px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--brown);margin:0 0 10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.full{grid-column:1/-1}label{font-size:11px;font-weight:700;display:block;margin-bottom:5px}
+input,select{width:100%;border:1px solid var(--line);border-radius:11px;padding:11px;background:#fff;color:var(--text);font-size:15px}
+.flavor{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 7px;border:1px solid #eadbd0;border-radius:11px;margin:7px 0;background:#fff}.flavor span{font-size:13px;line-height:1.2}.fq{width:62px!important;text-align:center;font-weight:700;padding:8px!important}
+.total{display:flex;justify-content:space-between;background:var(--bg);border-radius:12px;padding:13px;margin-top:12px;font-weight:800;color:var(--brown)}
+button{border:0;border-radius:13px;padding:13px 15px;font-size:15px;font-weight:700;cursor:pointer}.primary{width:100%;background:var(--brown);color:#fff}.secondary{width:100%;background:var(--beige);color:var(--brown);margin-top:8px}.mini{background:var(--beige);color:var(--brown);padding:9px 11px;font-size:12px}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(540px,100%);height:76px;background:#fff;border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(4,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:5}.nav{background:none;color:var(--muted);font-size:10px;border-radius:0;padding:9px 2px}.nav.active{color:var(--brown);font-weight:800}.nav b{display:block;font-size:22px;margin-bottom:2px}
+.order{padding:13px;border:1px solid var(--line);border-radius:15px;margin:9px 0;background:#fff}.order strong{color:var(--brown)}.empty{text-align:center;padding:35px 10px;color:var(--muted)}
+.badge{display:inline-block;background:var(--beige);color:var(--brown);border-radius:99px;padding:4px 8px;font-size:10px;margin-top:5px}.hidden{display:none!important}
+.notice{background:#f1e1d4;border-radius:12px;padding:11px;font-size:12px;line-height:1.4;margin-bottom:13px}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="brand">🤎 Docinhos</div><div class="title">com mais amor</div><div class="sub">Seu cantinho de pedidos</div></header>
+<main>
+
+<section id="home" class="screen active">
+<div class="card">
+<h2>Olá! 🤎</h2>
+<p style="margin:0 0 15px;font-size:14px">Organize suas encomendas, escolha os sabores e envie a confirmação para suas clientes.</p>
+<button class="primary" onclick="show('novo')">＋ Novo pedido</button>
+</div>
+<div class="card"><div class="section-title">Resumo</div><div class="grid">
+<div><b id="homePedidos">0</b><br><small>pedidos salvos</small></div>
+<div><b id="homeAgenda">0</b><br><small>reservas futuras</small></div>
+</div></div>
+</section>
+
+<section id="novo" class="screen">
+<h2>Novo pedido</h2>
+<div class="card"><div class="section-title">Dados da cliente</div>
+<div class="grid">
+<div class="field full"><label>Cliente</label><input id="cliente" placeholder="Nome da cliente"></div>
+<div><label>Data do pedido</label><input id="dataPedido" type="date"></div>
+<div><label>Entrega/retirada</label><input id="dataEntrega" type="date"></div>
+<div><label>Horário</label><input id="horario" type="time"></div>
+<div><label>Recebimento</label><select id="recebimento"><option>Entrega</option><option>Retirada</option></select></div>
+</div></div>
+
+<div class="card"><div class="section-title">Sabores e quantidades</div>
+<div id="flavors"></div>
+<div class="total"><span>Total de docinhos</span><span id="total">0</span></div>
+<div style="margin-top:12px"><label>Valor final (R$)</label><input id="valor" type="number" step=".01" placeholder="Ex.: 60,00"></div>
+</div>
+
+<div class="card"><div class="section-title">Pagamento e reserva</div>
+<div class="grid">
+<div><label>Pagamento</label><select id="pagamento"><option>Pix</option><option>Dinheiro</option></select></div>
+<div><label>Horário da reserva</label><input id="horaReserva" type="time"></div>
+<div class="full"><label>Data da reserva</label><input id="dataReserva" type="date"></div>
+</div></div>
+
+<div class="card"><button class="primary" onclick="salvarPedido()">Salvar pedido</button><button class="secondary" onclick="gerarWhatsApp()">Gerar mensagem para WhatsApp</button></div>
+<div id="msg" class="notice hidden"></div>
+</section>
+
+<section id="pedidos" class="screen"><h2>Meus pedidos</h2><div id="listaPedidos"></div></section>
+
+<section id="agenda" class="screen"><h2>Agenda</h2><div class="card"><div class="section-title">Reservas</div><div id="listaAgenda"></div></div></section>
+
+</main>
+<nav class="bottom">
+<button class="nav active" data-screen="home" onclick="show('home')"><b>⌂</b>Início</button>
+<button class="nav" data-screen="novo" onclick="show('novo')"><b>＋</b>Novo</button>
+<button class="nav" data-screen="pedidos" onclick="show('pedidos')"><b>☷</b>Pedidos</button>
+<button class="nav" data-screen="agenda" onclick="show('agenda')"><b>♡</b>Agenda</button>
+</nav>
+</div>
+
+<script>
+const sabores=["Brigadeiro c/ flocos macio","Ninho c/ Nutella","Brigadeiro c/ granulado tradicional","Beijinho","Moranginho","Ninho c/ Kinder","Paçoquinha","Casadinho","Brigadeiro c/ disquete","Brigadeiro c/ cereal ball"];
+const precos={25:60,30:70,40:90,50:110,60:130,70:150,80:170,90:190,100:210};
+let pedidos=JSON.parse(localStorage.getItem('docinhos_pedidos')||'[]');
+
+const f=document.getElementById('flavors');
+sabores.forEach((s,i)=>{f.innerHTML+=`<div class="flavor"><span>${s}</span><input class="fq" id="q${i}" type="number" min="0" value="0" inputmode="numeric" oninput="calc()"></div>`});
+function calc(){let t=0;document.querySelectorAll('.fq').forEach(x=>t+=Math.max(0,parseInt(x.value)||0));document.getElementById('total').textContent=t;if(precos[t] && !document.getElementById('valor').value)document.getElementById('valor').value=precos[t];}
+function iso(){let d=new Date();d=new Date(d-d.getTimezoneOffset()*60000);return d.toISOString().slice(0,10)}
+function fmt(v){if(!v)return '—';let [y,m,d]=v.split('-');return `${d}/${m}/${y}`}
+function money(v){return Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function dados(){let qs=sabores.map((s,i)=>({s,q:parseInt(document.getElementById('q'+i).value)||0})).filter(x=>x.q>0);return {
+id:Date.now(),cliente:document.getElementById('cliente').value.trim()||'Cliente',dataPedido:document.getElementById('dataPedido').value,
+dataEntrega:document.getElementById('dataEntrega').value,horario:document.getElementById('horario').value,recebimento:document.getElementById('recebimento').value,
+sabores:qs,total:qs.reduce((a,x)=>a+x.q,0),valor:document.getElementById('valor').value,pagamento:document.getElementById('pagamento').value,
+dataReserva:document.getElementById('dataReserva').value,horaReserva:document.getElementById('horaReserva').value}}
+function salvarPedido(){let p=dados();pedidos.unshift(p);localStorage.setItem('docinhos_pedidos',JSON.stringify(pedidos));render();document.getElementById('msg').classList.remove('hidden');document.getElementById('msg').textContent='Pedido salvo no seu celular! 🤎';}
+function gerarWhatsApp(){let p=dados();let texto=`🤎 *ORÇAMENTO & RESERVA DE ENCOMENDA*\\n\\nOlá, ${p.cliente}! Segue a confirmação do seu pedido:\\n\\n📅 Data da entrega/retirada: ${fmt(p.dataEntrega)}\\n🕐 Horário: ${p.horario||'—'}\\n📦 Forma de recebimento: ${p.recebimento}\\n\\n🍬 *${p.total} docinhos*\\n${p.sabores.length?p.sabores.map(x=>`☑ ${x.s} — ${x.q} un.`).join('\\n'):'Nenhum sabor selecionado'}\\n\\n💰 Valor total: ${money(p.valor)}\\n💳 Forma de pagamento: ${p.pagamento}\\n\\n🤎 *Encomenda reservada para ${fmt(p.dataReserva)} às ${p.horaReserva||'—'}.*\\n\\nObrigada por escolher nossos docinhos! 🤎`;
+navigator.clipboard?.writeText(texto).then(()=>alert('Mensagem copiada! É só colar no WhatsApp. 🤎')).catch(()=>prompt('Copie a mensagem:',texto))}
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');document.querySelectorAll('.nav').forEach(n=>n.classList.toggle('active',n.dataset.screen===id));if(id==='pedidos'||id==='agenda'||id==='home')render();window.scrollTo(0,0)}
+function render(){document.getElementById('homePedidos').textContent=pedidos.length;document.getElementById('homeAgenda').textContent=pedidos.filter(p=>p.dataReserva>=iso()).length;
+const lp=document.getElementById('listaPedidos');lp.innerHTML=pedidos.length?pedidos.map(p=>`<div class="order"><strong>${p.cliente}</strong><br>${p.total} docinhos • ${money(p.valor)}<br><span class="badge">${fmt(p.dataEntrega)} • ${p.recebimento}</span><button class="mini" style="float:right" onclick="reabrir(${p.id})">Abrir</button></div>`).join(''):'<div class="empty">Nenhum pedido salvo ainda. 🤎</div>';
+const la=document.getElementById('listaAgenda');let a=pedidos.filter(p=>p.dataReserva).sort((x,y)=>x.dataReserva.localeCompare(y.dataReserva));la.innerHTML=a.length?a.map(p=>`<div class="order"><strong>${fmt(p.dataReserva)}</strong> • ${p.horaReserva||'—'}<br>${p.cliente} — ${p.total} docinhos</div>`).join(''):'<div class="empty">Sua agenda está vazia.</div>'}
+function reabrir(id){let p=pedidos.find(x=>x.id===id);if(!p)return;show('novo');document.getElementById('cliente').value=p.cliente;document.getElementById('dataPedido').value=p.dataPedido;document.getElementById('dataEntrega').value=p.dataEntrega;document.getElementById('horario').value=p.horario;document.getElementById('recebimento').value=p.recebimento;document.getElementById('valor').value=p.valor;document.getElementById('pagamento').value=p.pagamento;document.getElementById('dataReserva').value=p.dataReserva;document.getElementById('horaReserva').value=p.horaReserva;sabores.forEach((s,i)=>document.getElementById('q'+i).value=(p.sabores.find(x=>x.s===s)||{}).q||0);calc()}
+document.getElementById('dataPedido').value=iso();document.getElementById('dataReserva').value=iso();render();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body></html>
